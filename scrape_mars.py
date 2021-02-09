@@ -84,5 +84,5 @@ def scrape():
     output = dict(news_title = latest_title, description = news_p,
      picture_url = featured_image_url, facts_table = table_html,
      hemisphere_data = hemisphere_urls)
-    print(output)
-scrape()
+    return(output)
+    
