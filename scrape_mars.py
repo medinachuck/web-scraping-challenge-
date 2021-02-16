@@ -57,7 +57,7 @@ def scrape():
     facts = pd.read_html(facts_html)
     table = facts[0]
     #write table to html 
-    table_html = table.to_html()
+    table_html = table.to_html(index=False, header=False)
 
     #visit usgs site 
     usgs = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
@@ -74,15 +74,20 @@ def scrape():
     hemisphere_urls = []
     for link in links_list:
         browser.click_link_by_partial_text(link)
-        browser.click_link_by_partial_text('Sample')
-        image_link = browser.url
-        info_dict = dict({"title":link, "img_url":image_link})
-    #     print(info_dict)
+        new_url= browser.html
+        new_soup = bs(new_url, 'html.parser')
+        container = new_soup.find('div', class_='downloads')
+        sample = container.find('li')
+        href = sample.find('a')['href']
+        info_dict = dict({"title":link, "img_url":href})
         hemisphere_urls.append(info_dict)
         browser.visit(usgs)
     browser.quit()
     output = dict(news_title = latest_title, description = news_p,
      picture_url = featured_image_url, facts_table = table_html,
      hemisphere_data = hemisphere_urls)
-    return(output)
+    return output
+    # print(type(output.facts_table))
+    # print(output)
+# scrape()
     

@@ -2,8 +2,7 @@
 from flask import Flask, render_template, redirect
 from flask_pymongo import PyMongo
 import scrape_mars
-import pymongo
-# import scrape_craigslist    
+import pymongo  
 
 app = Flask(__name__)
 
@@ -16,10 +15,11 @@ mongo = PyMongo(app)
 # mongo = PyMongo(app, uri="mongodb://localhost:27017/mars_data")
 
 @app.route("/scrape")
-def scraper():
+def scrape():
     mars_web_data = mongo.db.mars_web_data
     scraped_data = scrape_mars.scrape()
     mars_web_data.update({}, scraped_data, upsert=True)
+    print('hello')
     return redirect("/", code=302)
 
 @app.route("/")
